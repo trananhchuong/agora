@@ -1,7 +1,5 @@
-import { useState, useEffect } from 'react';
-import AgoraRTC, {
-    IAgoraRTCClient, IAgoraRTCRemoteUser, MicrophoneAudioTrackInitConfig, CameraVideoTrackInitConfig, IMicrophoneAudioTrack, ICameraVideoTrack, ILocalVideoTrack, ILocalAudioTrack
-} from 'agora-rtc-sdk-ng';
+import AgoraRTC from 'agora-rtc-sdk-ng';
+import { useEffect, useState } from 'react';
 
 export default function useAgora(client) {
     const [localVideoTrack, setLocalVideoTrack] = useState(undefined);
@@ -76,6 +74,14 @@ export default function useAgora(client) {
         };
     }, [client]);
 
+    async function resumedByKey({ play, key }) {
+        if(key === "video"){
+            localVideoTrack && await localVideoTrack.setEnabled(play);
+        }else if(key === "audio"){
+            localAudioTrack && await localAudioTrack.setEnabled(play);
+        }
+    }
+
     return {
         localAudioTrack,
         localVideoTrack,
@@ -83,5 +89,6 @@ export default function useAgora(client) {
         leave,
         join,
         remoteUsers,
+        resumedByKey
     };
 }

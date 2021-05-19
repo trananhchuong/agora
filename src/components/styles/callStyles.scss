@@ -1,21 +1,51 @@
 .call {
     text-align: center;
-}
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-.player-container {
-    padding: 20px;
-    text-align: initial;
-}
+    .call-form {
+        position: fixed;
+        bottom: 0;
+        background: #fff;
+        z-index: 2;
 
-.button-group {
-    padding: 20px;
-}
+        label {
+            display: none;
+        }
 
-.call-form {
-    padding: 20px;
-}
+        input,
+        button {
+            margin-right: 10px;
+        }
+        .button-group {
+            padding: 20px;
+        }
+    }
+    
+    .player-container {
+        position: relative;
+        flex: 1;
+        .local-player-wrapper {
+            position: absolute;
+            z-index: 1;
+            right: 30px;
+            top: 30px;
 
-input,
-button {
-    margin-right: 10px;
+            .video-player {
+                width: 316px;
+                height: 214px;
+            }
+        }
+
+        .remote-player-wrapper {
+            .video-player {
+                height: 100vh;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100vw;
+            }
+        }
+    }
 }

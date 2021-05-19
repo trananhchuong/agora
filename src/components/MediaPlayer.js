@@ -1,5 +1,4 @@
-import { ILocalVideoTrack, IRemoteVideoTrack, ILocalAudioTrack, IRemoteAudioTrack } from "agora-rtc-sdk-ng";
-import React, { useRef, useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 
 
 const MediaPlayer = (props) => {
@@ -21,7 +20,10 @@ const MediaPlayer = (props) => {
     }, [props.audioTrack]);
 
     return (
-        <div ref={container} className="video-player" style={{ width: "320px", height: "240px" }}></div>
+        <div
+            ref={container}
+            className="video-player"
+        />
     );
 }
 

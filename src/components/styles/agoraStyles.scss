@@ -1,0 +1,30 @@
+div.select {
+    display: inline-block;
+    margin: 0 0 1em 0;
+}
+
+p.small {
+    font-size: 0.7em;
+}
+
+label {
+    width: 12em;
+    display: inline-block;
+}
+
+.container {
+    position: static;
+    max-width: 1170px;
+    margin: 0 auto;
+
+    .devices-box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .devices {
+            flex: 1;
+            margin-right: 15px;
+        }
+    }
+}

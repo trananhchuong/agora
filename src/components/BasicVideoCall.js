@@ -4,6 +4,9 @@ import AgoraRTC, { IAgoraRTCClient, ClientConfig } from "agora-rtc-sdk-ng";
 import Loading from './loading/Loading';
 import './styles/basicVideoStyles.scss'
 import FormSubmit from './FormSubmit';
+import { useAppContext } from '../context/AppContext';
+
+import _ from 'lodash';
 
 BasicVideoCall.propTypes = {
 
@@ -16,12 +19,13 @@ export const config = {
 };
 
 function BasicVideoCall(props) {
+    const { client, setClient } = useAppContext();
+
     const [options, setOptions] = useState({});
-    const [client, setClient] = useState({});
+    // const [client, setClient] = useState({});
     const [loading, setLoading] = useState(true);
     const [remoteUsers, setRemoteUsers] = useState({});
     const [dataScreen, setDataScreen] = useState([]);
-
 
     const formRef = useRef();
 
@@ -32,10 +36,10 @@ function BasicVideoCall(props) {
 
     useEffect(() => {
         setTimeout(() => {
-            let clientInit = AgoraRTC.createClient(config);
+            let clientInit = _.cloneDeep(client);
             clientInit.on("user-published", handleUserPublished);
             clientInit.on("user-unpublished", handleUserUnpublished);
-    
+
             setClient(clientInit);
             setOptions({
                 ...options,
@@ -68,34 +72,35 @@ function BasicVideoCall(props) {
     }
 
     async function subscribe(user, mediaType) {
-        const uid = user.uid;
+        try {
+            const uid = user.uid;
 
+            const client2 = AgoraRTC.createClient(config)
+            // subscribe to a remote user
+            console.log("🚀 ~ file: BasicVideoCall.js ~ line 77 ~ subscribe ~ client", client)
 
-        const client2 = AgoraRTC.createClient(config)
+            client && await client.subscribe(user, mediaType);
+            console.log("subscribe success");
+            debugger
+            if (mediaType === 'video') {
+                console.log("!23");
+                // const player = $(`
+                //     <div id="player-wrapper-${uid}">
+                //     <p class="player-name">remoteUser(${uid})</p>
+                //     <div id="player-${uid}" class="player"></div>
+                //     </div>
+                // `);
+                // $("#remote-playerlist").append(player);
+                user.videoTrack.play(`player-${uid}`);
+            }
+            if (mediaType === 'audio') {
+                user.audioTrack.play();
+            }
+        } catch (error) {
+            console.log("🚀 ~ file: BasicVideoCall.js ~ line 74 ~ subscribe ~ error", error)
 
-        // subscribe to a remote user
-        console.log("🚀 ~ file: BasicVideoCall.js ~ line 77 ~ subscribe ~ client", client)
-        console.log("🚀 ~ file: BasicVideoCall.js ~ line 78 ~ subscribe ~ client2", client2)
-        
-        client2 && await client2.subscribe(user, mediaType);
-        console.log("subscribe success");
-        debugger
-        if (mediaType === 'video') {
-            console.log("!23");
-            // const player = $(`
-            //     <div id="player-wrapper-${uid}">
-            //     <p class="player-name">remoteUser(${uid})</p>
-            //     <div id="player-${uid}" class="player"></div>
-            //     </div>
-            // `);
-            // $("#remote-playerlist").append(player);
-            user.videoTrack.play(`player-${uid}`);
-        }
-        if (mediaType === 'audio') {
-            user.audioTrack.play();
         }
     }
-
 
 
     const onHandleJoin = async () => {
